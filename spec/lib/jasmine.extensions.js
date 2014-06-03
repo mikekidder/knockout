@@ -1,3 +1,10 @@
+jasmine.Spec.prototype.restoreAfter = function(object, propertyName) {
+    var originalValue = object[propertyName];
+    this.after(function() {
+        object[propertyName] = originalValue;
+    });
+};
+
 jasmine.Matchers.prototype.toEqualOneOf = function (expectedPossibilities) {
     for (var i = 0; i < expectedPossibilities.length; i++) {
         if (this.env.equals_(this.actual, expectedPossibilities[i])) {
@@ -58,6 +65,25 @@ jasmine.Matchers.prototype.toHaveSelectedValues = function (expectedValues) {
     return this.env.equals_(selectedValues, expectedValues);
 };
 
+jasmine.Matchers.prototype.toThrowContaining = function(expected) {
+    var exception;
+    try {
+        this.actual();
+    } catch (e) {
+        exception = e;
+    }
+    var exceptionMessage = exception && (exception.message || exception);
+
+    this.message = function () {
+        var notText = this.isNot ? " not" : "";
+        var expectation = "Expected " + this.actual.toString() + notText + " to throw exception containing '" + expected + "'";
+        var result = exception ? (", but it threw '" + exceptionMessage + "'") : ", but it did not throw anything";
+        return expectation + result;
+    }
+
+    return exception ? this.env.contains_(exceptionMessage, expected) : false;
+};
+
 jasmine.addScriptReference = function(scriptUrl) {
     if (window.console)
         console.log("Loading " + scriptUrl + "...");
@@ -88,3 +114,5 @@ jasmine.ieVersion = typeof(document) == 'undefined' ? undefined : (function() {
         );
     return version > 4 ? version : undefined;
 }());
+
+jasmine.browserSupportsProtoAssignment = { __proto__: [] } instanceof Array;

@@ -32,12 +32,15 @@ if (process.argv.length > 2 && process.argv[2] == '--source') {
 require('./arrayEditDetectionBehaviors');
 require('./asyncBehaviors');
 require('./dependentObservableBehaviors');
+require('./pureComputedBehaviors');
 require('./expressionRewritingBehaviors');
 require('./extenderBehaviors');
 require('./mappingHelperBehaviors');
 require('./observableArrayBehaviors');
+require('./observableArrayChangeTrackingBehaviors');
 require('./observableBehaviors');
 require('./subscribableBehaviors');
+require('./utilsBehaviors');
 
 // get reference to jasmine runtime
 var env = jasmine.jasmine.getEnv();
